@@ -1,0 +1,5 @@
+[flake8]
+ignore=E402,F401
+extend-ignore = E203, W503
+exclude = venv,__pycache__,fixtures,migrations,app.py, __init__.py
+max-line-length = 88
