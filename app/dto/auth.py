@@ -32,6 +32,7 @@ class JwtCredentials(AccessTokenDto):
 
 class UserDto(BaseModel):
     email: str
+    username: str
     is_active: bool
     is_banned: bool
     role: RoleType

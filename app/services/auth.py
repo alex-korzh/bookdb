@@ -25,6 +25,7 @@ class AuthService:
             raise HTTPException(status_code=500, detail="User creating unsuccessful")
         return UserDto(
             email=db_user.email,
+            username=db_user.username,
             is_active=db_user.is_active,
             is_banned=db_user.is_banned,
             role=cast(RoleType, db_user.role),
