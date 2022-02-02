@@ -2,6 +2,7 @@ import uuid
 from statistics import mode
 from typing import Any, Generic, List, Optional, Type, TypeVar
 
+from sqlalchemy import func
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from sqlalchemy.sql.expression import Select
@@ -19,6 +20,10 @@ class BaseRepository(Generic[TModel]):
     @property
     def select(self) -> Select:
         return select(self.model)
+
+    @property
+    def select_count(self) -> Select:
+        return select(func.count(self.model.id))  # type: ignore
 
     async def get_by_id(self, id: uuid.UUID) -> Optional[TModel]:
         return await self.session.get(self.model, id)

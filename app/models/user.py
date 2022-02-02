@@ -10,8 +10,8 @@ from .base import IdentifiableMixin
 class User(Base, IdentifiableMixin):
     __tablename__ = "users"
 
-    email = Column(String(120), nullable=False)
-    username = Column(String(120), nullable=False)
+    email = Column(String(120), nullable=False, unique=True)
+    username = Column(String(120), nullable=False, unique=True)
     password = Column(String(120), nullable=False)
     is_active = Column(Boolean, nullable=False, default=False)
     is_banned = Column(Boolean, nullable=False, default=False)

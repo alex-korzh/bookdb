@@ -1,4 +1,3 @@
-from app.api.router import router
 from app.dto.auth import (
     AccessTokenDto,
     JwtCredentials,
@@ -7,7 +6,9 @@ from app.dto.auth import (
     UserDto,
 )
 from app.services.auth import AuthService, get_auth_service
-from fastapi import Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException
+
+router = APIRouter()
 
 
 @router.post("/register/", response_model=UserDto)

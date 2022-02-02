@@ -1,9 +1,9 @@
 from app.types import RoleType
-from pydantic import BaseModel, SecretStr, validator
+from pydantic import BaseModel, EmailStr, SecretStr, validator
 
 
 class LoginDto(BaseModel):
-    email: str
+    email: EmailStr
     password: SecretStr
 
 
