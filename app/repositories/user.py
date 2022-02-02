@@ -10,7 +10,9 @@ class UserRepository(BaseRepository[User]):
     model = User
 
     async def get_by_email(self, email: str) -> Optional[User]:
-        return await self.session.execute(self.select.filter_by(email=email))  # type: ignore
+        return await self.session.execute(
+            self.select.filter_by(email=email)  # type: ignore
+        )
 
 
 async def get_user_repository(session: AsyncSession) -> UserRepository:

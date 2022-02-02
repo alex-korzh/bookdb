@@ -5,7 +5,7 @@ from app.dto.auth import RegistrationDto, UserDto
 from app.models.user import User
 from app.repositories.user import UserRepository, get_user_repository
 from app.types import RoleType
-from fastapi import Depends
+from fastapi import Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 
 
@@ -22,8 +22,7 @@ class AuthService:
         await self._user_repository.update(new_user)
         db_user = await self._user_repository.get_by_email(data.email)
         if not db_user:
-            # TODO system of exceptions
-            raise Exception()
+            raise HTTPException(status_code=500, detail="User creating unsuccessful")
         return UserDto(
             email=db_user.email,
             is_active=db_user.is_active,
