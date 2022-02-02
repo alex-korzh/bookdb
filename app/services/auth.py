@@ -1,7 +1,10 @@
+from typing import cast
+
 from app.db import get_session
 from app.dto.auth import RegistrationDto, UserDto
 from app.models.user import User
 from app.repositories.user import UserRepository, get_user_repository
+from app.types import RoleType
 from fastapi import Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -11,8 +14,11 @@ class AuthService:
         self._user_repository = user_repository
 
     async def register(self, data: RegistrationDto) -> UserDto:
-        new_user = User(email=data.email, password=data.password.get_secret_value())
-        # TODO add role (consider adding it to the migration as it is part of the app. Also add migrations itself)
+        new_user = User(
+            email=data.email,
+            password=data.password.get_secret_value(),
+            role=RoleType.USER,
+        )
         await self._user_repository.update(new_user)
         db_user = await self._user_repository.get_by_email(data.email)
         if not db_user:
@@ -22,7 +28,7 @@ class AuthService:
             email=db_user.email,
             is_active=db_user.is_active,
             is_banned=db_user.is_banned,
-            role=db_user.role.name,
+            role=cast(RoleType, db_user.role),
         )
 
 

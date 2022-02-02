@@ -1,5 +1,6 @@
 from app.db import Base
-from sqlalchemy import Boolean, Column, ForeignKey, String
+from app.types import RoleType
+from sqlalchemy import Boolean, Column, Enum, ForeignKey, String
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 
@@ -14,12 +15,4 @@ class User(Base, IdentifiableMixin):
     is_active = Column(Boolean, nullable=False, default=False)
     is_banned = Column(Boolean, nullable=False, default=False)
 
-    role_id = Column(UUID(as_uuid=True), ForeignKey("role.id"))
-
-
-class Role(Base, IdentifiableMixin):
-    __tablename__ = "roles"
-
-    name = Column(String(120), nullable=False)
-
-    users = relationship("User", backref="role")
+    role = Column(Enum(RoleType))

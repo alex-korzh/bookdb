@@ -1,3 +1,4 @@
+from app.types import RoleType
 from pydantic import BaseModel, SecretStr, validator
 
 
@@ -33,4 +34,4 @@ class UserDto(BaseModel):
     email: str
     is_active: bool
     is_banned: bool
-    role: str
+    role: RoleType
