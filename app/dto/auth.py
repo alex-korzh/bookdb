@@ -23,11 +23,8 @@ class RegistrationDto(LoginDto):
         return v
 
 
-class AccessTokenDto(BaseModel):
+class JwtCredentials(BaseModel):
     access_token: str
-
-
-class JwtCredentials(AccessTokenDto):
     refresh_token: str
 
 

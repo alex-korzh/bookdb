@@ -1,4 +1,5 @@
 from datetime import datetime, timedelta
+from typing import Optional, cast
 
 from app.config import settings
 from app.db import get_session
@@ -7,7 +8,7 @@ from app.models.user import User
 from app.repositories.user import UserRepository, get_user_repository
 from app.types import RoleType
 from fastapi import Depends, HTTPException
-from jose import jwt
+from jose import JWTError, jwt
 from passlib.context import CryptContext
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -16,6 +17,9 @@ class AuthService:
     def __init__(self, user_repository: UserRepository) -> None:
         self._user_repository = user_repository
         self._pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+
+    async def get_user_by_email(self, email: str) -> Optional[User]:
+        return await self._user_repository.get_by_email(email)
 
     def _hash_password(self, password: str) -> str:
         return self._pwd_context.hash(password)
@@ -31,6 +35,14 @@ class AuthService:
         }
         return jwt.encode(data, settings.SECRET_KEY, algorithm=settings.ALGORITHM)
 
+    def _generate_credentials(self, user_email: str) -> JwtCredentials:
+        access_delta = timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
+        refresh_delta = timedelta(hours=settings.REFRESH_TOKEN_EXPIRE_HOURS)
+        return JwtCredentials(
+            access_token=self._generate_token(user_email, access_delta),
+            refresh_token=self._generate_token(user_email, refresh_delta),
+        )
+
     async def authenticate(self, data: LoginDto) -> JwtCredentials:
         user = await self._user_repository.get_by_email(data.email)
         if not user or not self._verify_password(
@@ -39,12 +51,7 @@ class AuthService:
             raise HTTPException(
                 status_code=401, detail="User with this credentials was not found"
             )
-        access_delta = timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
-        refresh_delta = timedelta(hours=settings.REFRESH_TOKEN_EXPIRE_HOURS)
-        return JwtCredentials(
-            access_token=self._generate_token(user.email, access_delta),
-            refresh_token=self._generate_token(user.email, refresh_delta),
-        )
+        return self._generate_credentials(user.email)
 
     async def register(self, data: RegistrationDto) -> RegistrationResponse:
         if await self._user_repository.check_user_by_email_username(
@@ -68,6 +75,9 @@ class AuthService:
             email=db_user.email,
             username=db_user.username,
         )
+
+    async def refresh(self, user: User) -> JwtCredentials:
+        return self._generate_credentials(user.email)
 
 
 async def get_auth_service(session: AsyncSession = Depends(get_session)) -> AuthService:

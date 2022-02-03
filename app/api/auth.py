@@ -1,12 +1,7 @@
-from app.dto.auth import (
-    AccessTokenDto,
-    JwtCredentials,
-    LoginDto,
-    RegistrationDto,
-    RegistrationResponse,
-)
+from app.dto.auth import JwtCredentials, LoginDto, RegistrationDto, RegistrationResponse
 from app.services.auth import AuthService, get_auth_service
-from fastapi import APIRouter, Depends, HTTPException
+from app.utils.auth import AuthUtil
+from fastapi import APIRouter, Depends
 
 router = APIRouter()
 
@@ -25,6 +20,10 @@ async def login(
     return await auth_service.authenticate(data)
 
 
-@router.post("/token/")
-async def refresh_token() -> AccessTokenDto:
-    pass
+@router.post("/refresh/", response_model=JwtCredentials)
+async def refresh_token(
+    auth_service: AuthService = Depends(get_auth_service),
+    auth_util: AuthUtil = Depends(),
+) -> JwtCredentials:
+    auth_user = await auth_util.authenticate()
+    return await auth_service.refresh(auth_user)
