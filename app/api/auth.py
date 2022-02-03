@@ -3,7 +3,7 @@ from app.dto.auth import (
     JwtCredentials,
     LoginDto,
     RegistrationDto,
-    UserDto,
+    RegistrationResponse,
 )
 from app.services.auth import AuthService, get_auth_service
 from fastapi import APIRouter, Depends, HTTPException
@@ -11,16 +11,18 @@ from fastapi import APIRouter, Depends, HTTPException
 router = APIRouter()
 
 
-@router.post("/register/", response_model=UserDto)
+@router.post("/register/", response_model=RegistrationResponse)
 async def register(
     data: RegistrationDto, auth_service: AuthService = Depends(get_auth_service)
-) -> UserDto:
+) -> RegistrationResponse:
     return await auth_service.register(data)
 
 
 @router.post("/login/", response_model=JwtCredentials)
-async def login(data: LoginDto) -> JwtCredentials:
-    pass
+async def login(
+    data: LoginDto, auth_service: AuthService = Depends(get_auth_service)
+) -> JwtCredentials:
+    return await auth_service.authenticate(data)
 
 
 @router.post("/token/")

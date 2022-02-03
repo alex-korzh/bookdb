@@ -1,3 +1,5 @@
+import uuid
+
 from app.types import RoleType
 from pydantic import BaseModel, EmailStr, SecretStr, validator
 
@@ -26,13 +28,9 @@ class AccessTokenDto(BaseModel):
 
 
 class JwtCredentials(AccessTokenDto):
-    id: str
     refresh_token: str
 
 
-class UserDto(BaseModel):
+class RegistrationResponse(BaseModel):
     email: str
     username: str
-    is_active: bool
-    is_banned: bool
-    role: RoleType
