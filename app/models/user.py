@@ -1,8 +1,9 @@
+__all__ = [
+    "User",
+]
 from app.db import Base
 from app.types import RoleType
-from sqlalchemy import Boolean, Column, Enum, ForeignKey, String
-from sqlalchemy.dialects.postgresql import UUID
-from sqlalchemy.orm import relationship
+from sqlalchemy import Boolean, Column, Enum, String
 
 from .base import IdentifiableMixin
 
