@@ -2,20 +2,20 @@
 name = "bookdb"
 version = "0.1.0"
 description = ""
-authors = ["dezalator <alex@korzh.me>"]
+authors = ["Your Name <you@example.com>"]
 
 [tool.poetry.dependencies]
-python = "^3.9"
+python = "^3.10"
 fastapi = {extras = ["all"], version = "^0.73.0"}
 python-jose = {extras = ["cryptography"], version = "^3.3.0"}
 passlib = {extras = ["bcrypt"], version = "^1.7.4"}
-alembic = "^1.7.6"
 SQLAlchemy = {extras = ["postgresql_asyncpg"], version = "^1.4.31"}
+alembic = "^1.7.6"
 
 [tool.poetry.dev-dependencies]
-flake8 = "^4.0.1"
-mypy = "^0.931"
 black = "^22.1.0"
+mypy = "^0.931"
+flake8 = "^4.0.1"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
