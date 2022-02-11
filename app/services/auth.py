@@ -3,12 +3,13 @@ from typing import Optional, cast
 
 from app.config import settings
 from app.db import get_session
-from app.dto.auth import JwtCredentials, LoginDto, RegistrationDto, RegistrationResponse
+from app.dto.auth import (JwtCredentials, LoginDto, RegistrationDto,
+                          RegistrationResponse)
 from app.models.user import User
 from app.repositories.user import UserRepository, get_user_repository
 from app.types import RoleType
 from fastapi import Depends, HTTPException
-from jose import JWTError, jwt
+from jose import jwt
 from passlib.context import CryptContext
 from sqlalchemy.ext.asyncio import AsyncSession
 
