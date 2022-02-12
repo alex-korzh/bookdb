@@ -5,10 +5,10 @@ from app.db import Base
 from app.types import RoleType
 from sqlalchemy import Boolean, Column, Enum, String
 
-from .base import IdentifiableMixin
+from app.models.base import UUIDMixin
 
 
-class User(Base, IdentifiableMixin):
+class User(Base, UUIDMixin):
     __tablename__ = "users"
 
     email = Column(String(120), nullable=False, unique=True)
