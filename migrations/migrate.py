@@ -3,9 +3,9 @@ import asyncio
 import logging
 import os
 from datetime import datetime
-from dotenv import load_dotenv
 
 import asyncpg  # type: ignore
+from dotenv import load_dotenv
 
 logger = logging.getLogger("migrations")
 logging.basicConfig(
@@ -49,8 +49,8 @@ class MigrationManager:
 
         filename = await self.__generate_name(migration_name)
 
-        open(os.path.join("sql", f"{filename}_upgrade.sql"), 'a').close()
-        open(os.path.join("sql", f"{filename}_downgrade.sql"), 'a').close()
+        open(os.path.join("sql", f"{filename}_upgrade.sql"), "a").close()
+        open(os.path.join("sql", f"{filename}_downgrade.sql"), "a").close()
 
         logger.info("migration file generated successfully")
 
@@ -59,13 +59,17 @@ class MigrationManager:
         last_migration_number = await self._get_last_migration_number()
 
         file_ids = []
-        for i in range(int(last_migration_number)+1, int(migration_number)+1):
-            file_ids.append(
-                self.__int_to_number(i)
-            )
+        for i in range(int(last_migration_number) + 1, int(migration_number) + 1):
+            file_ids.append(self.__int_to_number(i))
         file_names = []
         for i in file_ids:
-            file_names.extend([f for f in os.listdir(path="sql") if f.startswith(i) and f.endswith("_upgrade.sql")])
+            file_names.extend(
+                [
+                    f
+                    for f in os.listdir(path="sql")
+                    if f.startswith(i) and f.endswith("_upgrade.sql")
+                ]
+            )
         for file_name in file_names:
             with open(os.path.join("sql", file_name)) as f:
                 sql = f.read()
@@ -79,16 +83,20 @@ class MigrationManager:
         file_ids = []
         current_version = await self._get_last_migration_number()
         for i in range(int(current_version), int(migration_number), -1):
-            file_ids.append(
-                self.__int_to_number(i)
-            )
+            file_ids.append(self.__int_to_number(i))
         file_names = []
         for i in file_ids:
-            file_names.extend([f for f in os.listdir(path="sql") if f.startswith(i) and f.endswith("_downgrade.sql")])
+            file_names.extend(
+                [
+                    f
+                    for f in os.listdir(path="sql")
+                    if f.startswith(i) and f.endswith("_downgrade.sql")
+                ]
+            )
         for file_name in file_names:
             with open(os.path.join("sql", file_name)) as f:
                 sql = f.read()
-            new_version = self.__int_to_number(int(file_name[:PLACES])-1)
+            new_version = self.__int_to_number(int(file_name[:PLACES]) - 1)
             async with self.conn.transaction():
                 await self.conn.execute(sql)
                 await self.conn.execute(UPDATE_VERSION, new_version)
@@ -108,7 +116,7 @@ class MigrationManager:
 
         previous_filename = max(files, key=lambda x: int(x[:PLACES]))
         number = int(previous_filename[:PLACES]) + 1
-        if number > int(PLACES*"9"):
+        if number > int(PLACES * "9"):
             raise Exception("Too many migrations")
         str_number = self.__int_to_number(number)
         return f"{str_number}_{migration_name}"
@@ -125,6 +133,7 @@ class MigrationManager:
 
     def __int_to_number(self, i: int) -> str:
         return (PLACES - len(str(i))) * "0" + str(i)
+
 
 async def main() -> None:
     parser = argparse.ArgumentParser()
