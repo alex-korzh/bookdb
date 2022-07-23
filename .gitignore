@@ -7,3 +7,5 @@ venv
 .vscode
 .history
 .DS_Store
+__pypackages__
+.pdm.toml
