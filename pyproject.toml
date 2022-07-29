@@ -10,6 +10,7 @@ dependencies = [
     "python-jose[cryptography]>=3.3.0",
     "passlib[bcrypt]>=1.7.4",
     "sqlalchemy[postgresql_asyncpg]>=1.4.39",
+    "alembic>=1.8.1",
 ]
 requires-python = ">=3.10"
 license = {text = "MIT"}

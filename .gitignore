@@ -9,3 +9,4 @@ venv
 .DS_Store
 __pypackages__
 .pdm.toml
+*/build
