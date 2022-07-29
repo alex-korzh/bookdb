@@ -1,6 +1,3 @@
-import uuid
-
-from app.types import RoleType
 from pydantic import BaseModel, EmailStr, SecretStr, validator
 
 

@@ -51,4 +51,4 @@ class Genre(Base, IdentifiableMixin):
     __tablename__ = "genres"
 
     name = Column(String(255), nullable=False)
-    books = relationship("Book", secondary=book_to_author, back_populates="genres")
+    books = relationship("Book", secondary=book_to_genre, back_populates="genres")

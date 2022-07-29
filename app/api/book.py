@@ -3,4 +3,4 @@ __all__ = [
 ]
 from fastapi import APIRouter
 
-book_router = APIRouter()
+book_router = APIRouter(prefix="/book")

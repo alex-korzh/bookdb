@@ -9,7 +9,7 @@ from app.services.auth import AuthService, get_auth_service
 from app.utils.auth import AuthUtil
 from fastapi import APIRouter, Depends
 
-auth_router = APIRouter()
+auth_router = APIRouter(prefix="/auth")
 
 
 @auth_router.post("/register/", response_model=RegistrationResponse)
